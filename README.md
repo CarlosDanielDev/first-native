@@ -327,7 +327,7 @@ Agora recorte todo o conteúdo do arquivo `App.js` da raiz do projeto e cole-o, 
 `src/index.js`, em sequida apague o arquivo `App.js` da raiz do projeto, e edite o arquivo
 `index.js` da ***raiz*** do projeto.
 
-> Atenção, edite o arquivo `index.js` da ***raz***, não o `index.js` da pasta `src`.
+> Atenção, edite o arquivo `index.js` da ***raiz***, não o `index.js` da pasta `src`.
 
 Deixe o arquivo `index.js` da raiz do projeto, exatamente assim:
 

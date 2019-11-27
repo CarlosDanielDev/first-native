@@ -1,8 +1,7 @@
 # Configurando um Projeto React Native!
 
 Olá, me chamo Carlos Daniel, e minha intenção com este passo a passo, e explicar
-de uma maneira clara, como configurar um projeto `React-Native`, lembrando que,
-é necessário que você tenha familiaridade com a estrutura de um peojeto `Reactjs`.
+de uma maneira clara, como configurar um projeto `React-Native`.
 
 ## 1º Passo
 

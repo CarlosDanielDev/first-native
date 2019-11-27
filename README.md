@@ -7,7 +7,7 @@ de uma maneira clara, como configurar um projeto `React-Native`, lembrando que,
 ## 1º Passo
 
 Bem antes de mais nada é necessário fazer todas as configurações de ambiente,
-para que seja possível inciar uma aplicação `React-Native`, neste [link](https://https://docs.rocketseat.dev/ambiente-react-native/introducao), você pode conferir, como configurar seu ambiente
+para que seja possível inciar uma aplicação `React-Native`, neste [link](https://https://docs.rocketseat.dev/ambiente-react-native/introducao), você pode conferir, como configurar seu ambiente e emuladores.
 para executar aplicações `React-Native`.
 
 Depois de seguir todas as configurações, vamos dar inicio a configuração do nosso

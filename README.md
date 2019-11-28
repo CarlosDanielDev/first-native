@@ -522,7 +522,7 @@ dependencies {
 }
 
 ```
-> lembrando que esses códigos podem varia de acordo com a versão do `React-Navigation`, então certifique-se de que o código é exatamente o da documentação.
+> lembrando que esses códigos podem variar de acordo com a versão do `React-Navigation`, então certifique-se de que o código é exatamente o da documentação.
 
 Agora muita atenção nessa parte da documentação:
 

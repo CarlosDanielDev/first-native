@@ -212,6 +212,7 @@ module.exports = {
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
+    __DEV__: 'readonly'
   },
   parser:'babel-eslint',
   parserOptions: {
@@ -339,3 +340,335 @@ import {name as appName} from './app.json';
 AppRegistry.registerComponent(appName, () => App);
 ```
 
+## Debug
+
+Aqui vou configurar uma ferramenta de `debug` externa, a ferramenta se chama [reactotron](https://github.com/infinitered/reactotron), [baixe](https://github.com/infinitered/reactotron/releases) essa aplicação e instale na sua maquina, se estiver usando linux-debian (ou ubuntu) [click-aqui](https://github.com/infinitered/reactotron/releases/download/v2.17.1/reactotron-app_2.17.1_amd64.deb) para inciar o download automaticamente.
+
+Bem, depois de instalado, abra a aplicação, deixe ela aberta e vamos as suas configurações.
+
+Agora em seu terminal, execute o seguinte comando para instalar as dependências do `reactotron`, no nosso projeto `React-Native`.
+
+```bash
+yarn add reactotron-react-native
+```
+
+Agora, dentro da pasta `src`, vamos criar uma pasta chamada `config`, é lá que vamos abstrair todos os arquivos de configuração da nossa aplicação.
+
+Dentro dessa pasta vamos criar um arquivo chamado `ReactotronConfig.js`,
+se estiver no linex execute o comando na raiz do projeto:
+
+```bash
+touch src/config/ReactotronConfig.js
+```
+
+Agora vamos editar este aqrquivo, deixe-o exatamente assim:
+
+```jsx
+import Reactotron from 'reactotron-react-native';
+
+if(__DEV__){
+  const tron = Reactotron.configure({host: 'seu-ip-local'})
+    .useReactNative()
+    .connect();
+
+  console.tron = tron
+  tron.clear();
+}
+```
+1. Importamos o `Reactotron`
+
+2. Criamos uma condição
+  * Essa condição verifica se estamos em ambiente de `dev` ou não.
+
+3. Inicializando o Reactotron
+  * Neste ponto eu declaro uma constate recebendo o reactotron e algumas configurações necessárias para o uso do debug do `Reactotron`.
+4. Criei uma propriedade chamada `tron` dentro do Objeto `console` do javascript.
+  * Dentro da propriedade `tron`, que criamos no objeto global `console` e lá colocamos a constante que inicia o `Reactotron`.
+
+
+Agora vamos importar esse aquivo de configuração aue acabamos de criar dentro do nosso `src/index.js`.
+
+```jsx
+import React from 'react';
+import { View, Text, StyleSheet} from 'react-native';
+import './config/ReactotronConfig';
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  hello: {
+    fontSize: 20,
+    fontWeight: 'bold'
+  }
+});
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.hello}>Hello World!</Text>
+    </View>
+  );
+}
+```
+> Agora se você verificar a aplicação do Reactotron na aba `timeline`, existe uma notificação de conexão, isso signfica que deu tudo certo.
+
+Agora podemos debugar de uma maneira mais *sagaz* no `React-Native`, a unica mudança é que ao inves de simplesmente digitar `console.log('Alguma coisa')`, vamos utilizar `console.tron.log('Alguma coisa')`.
+
+
+
+## Roteamento
+
+Ok, agora vamos confirar o esquema de rotas da nossa apicação, primeiramente vamos esquematizar como serão exibidas as nossas `pages`.
+
+Dentro da pasta `src` crie uma pasta com o nome `pages`.
+
+Dentro da pasta `pages` nós vamos usar o seguinte esquema, para cada `page/view` que nós criarmos, ex: Main, é a página de inicio da aplicação, ao invés de criarmos um arquivo `Main.js`, vamos criar uma pasta com esse nome, e dentro dessa pasta vamos criar um arquivo `index.js`, então fica assim: `pages/Main/index.js`.
+
+Para esse exemplo vamos criar 2 `pages/views` muito simples, Main, e About, caso use Linux, ou Mac, execute no terminal o comando abaixo:
+
+```bash
+mkdir src/pages  src/pages/Main src/pages/About && touch src/pages/Main/index.js src/pages/About/index.js
+```
+Dentro de cada pasta dentro de `pages`, existe um arquivo `index.js`, edite-os e deixe-os assim:
+
+* `Main/index.js`
+
+```jsx
+import React from 'react';
+import { View } from 'react-native';
+
+// import { Container } from './styles';
+
+export default function Main() {
+  return <View />;
+}
+
+```
+
+* `About/index.js`
+
+```jsx
+import React from 'react';
+import { View } from 'react-native';
+
+// import { Container } from './styles';
+
+export default function About() {
+  return <View />;
+}
+```
+
+Agora dentro da minhas pasta `src`, vamos criar um arquivo com o nome de `routes.js`:
+
+```bash
+touch src/routes.js
+```
+
+Voltando ao terminal, vamos instalar o `react-navigation`.
+
+```bash
+yarn add react-navigation
+```
+> A biblioteca `react-native` muda constantemente, é interessante sempre seguir o passo a passo da propria [documentacao](https://reactnavigation.org/docs/pt-BR/getting-started.html), portanto, só vou fazer um apontamento dessa configuração aqui neste guia.
+
+* Como não vamos utilizar o `Expo`, instale essas [dependências](https://reactnavigation.org/docs/pt-BR/getting-started.html#installing-dependencies-into-a-bare-react-native-project)
+
+* Caso esteja no `Mac`, faça este passo
+
+```bash
+cd ios && pod install && cd ..
+```
+
+Para o android, continue lendo as docs, pois existe um passo muito importante
+<img src="https://i.imgur.com/YG2oySO.png" alt="Passo Android"/>
+
+Para finalizar a instalação da dependecia do `react-navigation` é necessário editar o arquivo
+`android/app/build.gradle`, adicionando os códigos da imagem acima.
+
+Nessa seção insira os código da imagem acima:
+
+```java
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+    // código aqui
+    if (enableHermes) {
+        def hermesPath = "../../node_modules/hermes-engine/android/";
+        debugImplementation files(hermesPath + "hermes-debug.aar")
+        releaseImplementation files(hermesPath + "hermes-release.aar")
+    } else {
+        implementation jscFlavor
+    }
+}
+```
+
+Deve ficar assim:
+
+```java
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
+    if (enableHermes) {
+        def hermesPath = "../../node_modules/hermes-engine/android/";
+        debugImplementation files(hermesPath + "hermes-debug.aar")
+        releaseImplementation files(hermesPath + "hermes-release.aar")
+    } else {
+        implementation jscFlavor
+    }
+}
+
+```
+> lembrando que esses códigos podem varia de acordo com a versão do `React-Navigation`, então certifique-se de que o código é exatamente o da documentação.
+
+Agora muita atenção nessa parte da documentação:
+
+<img src="https://i.imgur.com/8BvE1tn.png" alt="acoes MainActivity">
+
+Você vai editar o arquivo `android/app/src/main/java/com/<nome_do_seu_projeto>/MainActivity.java`, mas seguintes seções:
+
+```java
+package com.modulo5_native;
+
+import com.facebook.react.ReactActivity;
+
+// primeira seção
+public class MainActivity extends ReactActivity {
+
+  /**
+   * Returns the name of the main component registered from JavaScript. This is used to schedule
+   * rendering of the component.
+   */
+  @Override
+  protected String getMainComponentName() {
+    return "modulo5_native";
+  }
+
+
+}
+
+```
+
+Deve ficar assim:5
+
+```java
+package com.modulo5_native;
+
+import com.facebook.react.ReactActivity;
+import com.facebook.react.ReactActivityDelegate;
+import com.facebook.react.ReactRootView;
+import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
+
+public class MainActivity extends ReactActivity {
+
+  /**
+   * Returns the name of the main component registered from JavaScript. This is used to schedule
+   * rendering of the component.
+   */
+  @Override
+  protected String getMainComponentName() {
+    return "modulo5_native";
+  }
+  // segunda seção
+
+}
+
+```
+
+Agora adicione a ultima parte do código:6
+
+```java
+package com.modulo5_native;
+
+import com.facebook.react.ReactActivity;
+import com.facebook.react.ReactActivityDelegate;
+import com.facebook.react.ReactRootView;
+import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
+
+public class MainActivity extends ReactActivity {
+
+  /**
+   * Returns the name of the main component registered from JavaScript. This is used to schedule
+   * rendering of the component.
+   */
+  @Override
+  protected String getMainComponentName() {
+    return "modulo5_native";
+  }
+
+  @Override
+  protected ReactActivityDelegate createReactActivityDelegate() {
+    return new ReactActivityDelegate(this, getMainComponentName()) {
+      @Override
+      protected ReactRootView createRootView() {
+       return new RNGestureHandlerEnabledRootView(MainActivity.this);
+      }
+    };
+  }
+}
+
+```
+
+
+Certo, nós acabamos de instalar uma lib que mexe diretamente no código nativo, seja ele *IOS*, ou *ANDROID*, nós devemos rodar novamente os seguintes comando:
+
+* `android`
+```bash
+react-native run-android
+```
+* `ios`
+```bash
+react-native run-ios
+```
+Agora vamos configurar nosso arquivo de rotas, nós vamos utilizar nesse exemplo, a navegação por stack, mas você, tem total de liberdade de consultar a [documentação](https://reactnavigation.org/docs/pt-BR/hello-react-navigation.html), e escolher qual tipo de navegação você acha interessante.
+
+* para a navegação stack, vamo utilizar uma lib exrterna pra isso, a `react-navigation-stack`, então no seu terminal, execute:
+
+```bash
+yarn add react-navigation-stack
+```
+
+Agora edite seu arquivo `roputes.js`, deixe-o dessa forma:
+
+
+```jsx
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+
+import Main from './pages/Main';
+import About from './pages/About';
+
+const Routes = createAppContainer(createStackNavigator({ Main, Repository }));
+
+export default Routes;
+
+```
+
+Pronto, nossa navegação está praticamente criada, pronta pra ser utilizada.
+
+O que fizemos aqui ?
+
+1. importamos o App Cointainer.
+* Ele vai cobrir toda nossa navegação.
+2. Importamos a navegação stack.
+* Aqui eu configuro as `pages/views`(chame como preferir), que utilizarão a navegação stack.
+3. Exportei a constante de rotas expondo ela pra minha aplicação.
+
+
+Agora vamos editar o arquivo `src/index.js`, deixe-o exatamente assim.
+
+
+```jsx
+import React from 'react';
+import './config/ReactotronConfig';
+import Routes from './routes';
+
+export default function App() {
+  return <Routes />;
+}
+
+```
+Pronto Navegação Finalizada!!

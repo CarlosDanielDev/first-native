@@ -552,7 +552,7 @@ public class MainActivity extends ReactActivity {
 
 ```
 
-Deve ficar assim:5
+Deve ficar assim:
 
 ```java
 package com.modulo5_native;
@@ -578,7 +578,7 @@ public class MainActivity extends ReactActivity {
 
 ```
 
-Agora adicione a ultima parte do código:6
+Agora adicione a ultima parte do código:
 
 ```java
 package com.modulo5_native;

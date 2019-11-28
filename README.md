@@ -104,7 +104,7 @@ export default function App() {
 
 Isso deverá gerar um `Hello Wolrd!` na tela do seu emulador ou dispositivo móvel.
 
-## 3º Passo
+## 4º Passo
 
 Agora vamos instalar o `ESLint`, uma ferramenta que vai nos ajudar a padrionizar
 o nosso código, no seu terminal, execute o comando abaixo:
@@ -672,3 +672,24 @@ export default function App() {
 
 ```
 Pronto Navegação Finalizada!!
+
+Para testar, vamos adicionar um titulo à nossa `page/view` `Main`, edite o arquivo `Main/index.js`, e adicione as seguintes configurações:
+
+```jsx
+import React from 'react';
+import { View } from 'react-native';
+
+// import { Container } from './styles';
+
+export default function Main() {
+  return <View />;
+}
+// adicionamos isso aqui
+Main.navigationOptions = {
+  title: 'Meu App',
+};
+
+```
+> Se vocẽ esta utilizando o celular via `USB`, `Wi-Fi`, faça alguns reloads, pois talvez o `Metro-Bundler` não consiga fazer o `live-reload` dessa configuração.
+
+Bem, quandos nos redernciamos a nossa `page/view` no arquivo de rotas, dentro do metodo `cerateSatckNavigation()`, nos ganhamos acesso à algumas propriedades, uma delas é a `navigationOptions`, como o nome já é intuitivo você já deve ter sacado que são as opções da navegação, dentro desse objeto de configuração podemos fazer muita coisa, confira [aqui](https://reactnavigation.org/docs/en/stack-navigator.html#navigationoptions-for-screens-inside-of-the-navigator) algumas dessas propriedades que você pode alterar.
